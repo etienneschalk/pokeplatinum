@@ -916,7 +916,7 @@ void PokemonSprite_LoadXOffsetShadow(NARC *narc, s8 *xOffsetShadow, u16 species)
  */
 void PokemonSprite_LoadShadowSize(NARC *narc, u8 *shadowSize, u16 species);
 BOOL Pokemon_SetBallSeal(int param0, Pokemon *mon, enum HeapID heapID);
-void sub_02078B40(Pokemon *mon, BattleRecordingPokemon *param1);
-void Copy_BattleRecordingPokemon_to_Pokemon(BattleRecordingPokemon *param0, Pokemon *mon);
+void Copy_Pokemon_to_BattleRecordingPokemon(Pokemon *mon, BattleRecordingPokemon *targetMon);
+void Copy_BattleRecordingPokemon_to_Pokemon(BattleRecordingPokemon *sourceMon, Pokemon *mon);
 
 #endif // POKEPLATINUM_POKEMON_H

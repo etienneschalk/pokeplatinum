@@ -592,7 +592,7 @@ static void Copy_Party_to_BattleRecordingParty(const Party *sourceParty, BattleR
 
     for (slotIndex = 0; slotIndex < targetParty->currentCount; slotIndex++) {
         pokemon = Party_GetPokemonBySlotIndex(sourceParty, slotIndex);
-        sub_02078B40(pokemon, &targetParty->pokemon[slotIndex]);
+        Copy_Pokemon_to_BattleRecordingPokemon(pokemon, &targetParty->pokemon[slotIndex]);
     }
 }
 

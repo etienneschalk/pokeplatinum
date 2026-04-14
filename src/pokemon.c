@@ -5209,7 +5209,7 @@ BOOL Pokemon_SetBallSeal(int param0, Pokemon *mon, enum HeapID heapID)
     return TRUE;
 }
 
-void sub_02078B40(Pokemon *mon, BattleRecordingPokemon *param1)
+void Copy_Pokemon_to_BattleRecordingPokemon(Pokemon *mon, BattleRecordingPokemon *targetMon)
 {
     if (mon->box.partyDecrypted == FALSE) {
         Pokemon_DecryptData(&mon->party, sizeof(PartyPokemon), mon->box.personality);
@@ -5223,63 +5223,63 @@ void sub_02078B40(Pokemon *mon, BattleRecordingPokemon *param1)
     PokemonDataBlockC *monDataBlockC = BoxPokemon_GetDataBlock(boxMon, boxMon->personality, DATA_BLOCK_C);
     PokemonDataBlockD *monDataBlockD = BoxPokemon_GetDataBlock(boxMon, boxMon->personality, DATA_BLOCK_D);
 
-    param1->personality = boxMon->personality;
-    param1->partyDecrypted = FALSE;
-    param1->boxDecrypted = FALSE;
-    param1->checksumFailed = boxMon->checksumFailed;
-    param1->species = monDataBlockA->species;
-    param1->heldItem = monDataBlockA->heldItem;
-    param1->otID = monDataBlockA->otID;
-    param1->exp = monDataBlockA->exp;
-    param1->friendship = monDataBlockA->friendship;
-    param1->ability = monDataBlockA->ability;
-    param1->hpEV = monDataBlockA->hpEV;
-    param1->atkEV = monDataBlockA->atkEV;
-    param1->defEV = monDataBlockA->defEV;
-    param1->speedEV = monDataBlockA->speedEV;
-    param1->spAtkEV = monDataBlockA->spAtkEV;
-    param1->spDefEV = monDataBlockA->spDefEV;
-    param1->originLanguage = monDataBlockA->originLanguage;
+    targetMon->personality = boxMon->personality;
+    targetMon->partyDecrypted = FALSE;
+    targetMon->boxDecrypted = FALSE;
+    targetMon->checksumFailed = boxMon->checksumFailed;
+    targetMon->species = monDataBlockA->species;
+    targetMon->heldItem = monDataBlockA->heldItem;
+    targetMon->otID = monDataBlockA->otID;
+    targetMon->exp = monDataBlockA->exp;
+    targetMon->friendship = monDataBlockA->friendship;
+    targetMon->ability = monDataBlockA->ability;
+    targetMon->hpEV = monDataBlockA->hpEV;
+    targetMon->atkEV = monDataBlockA->atkEV;
+    targetMon->defEV = monDataBlockA->defEV;
+    targetMon->speedEV = monDataBlockA->speedEV;
+    targetMon->spAtkEV = monDataBlockA->spAtkEV;
+    targetMon->spDefEV = monDataBlockA->spDefEV;
+    targetMon->originLanguage = monDataBlockA->originLanguage;
 
     int i;
     for (i = 0; i < 4; i++) {
-        param1->moves[i] = monDataBlockB->moves[i];
-        param1->moveCurrentPPs[i] = monDataBlockB->moveCurrentPPs[i];
-        param1->movePPUps[i] = monDataBlockB->movePPUps[i];
+        targetMon->moves[i] = monDataBlockB->moves[i];
+        targetMon->moveCurrentPPs[i] = monDataBlockB->moveCurrentPPs[i];
+        targetMon->movePPUps[i] = monDataBlockB->movePPUps[i];
     }
 
-    param1->hpIV = monDataBlockB->hpIV;
-    param1->atkIV = monDataBlockB->atkIV;
-    param1->defIV = monDataBlockB->defIV;
-    param1->speedIV = monDataBlockB->speedIV;
-    param1->spAtkIV = monDataBlockB->spAtkIV;
-    param1->spDefIV = monDataBlockB->spDefIV;
-    param1->isEgg = monDataBlockB->isEgg;
-    param1->hasNickname = monDataBlockB->hasNickname;
-    param1->fatefulEncounter = monDataBlockB->fatefulEncounter;
-    param1->gender = monDataBlockB->gender;
-    param1->form = monDataBlockB->form;
+    targetMon->hpIV = monDataBlockB->hpIV;
+    targetMon->atkIV = monDataBlockB->atkIV;
+    targetMon->defIV = monDataBlockB->defIV;
+    targetMon->speedIV = monDataBlockB->speedIV;
+    targetMon->spAtkIV = monDataBlockB->spAtkIV;
+    targetMon->spDefIV = monDataBlockB->spDefIV;
+    targetMon->isEgg = monDataBlockB->isEgg;
+    targetMon->hasNickname = monDataBlockB->hasNickname;
+    targetMon->fatefulEncounter = monDataBlockB->fatefulEncounter;
+    targetMon->gender = monDataBlockB->gender;
+    targetMon->form = monDataBlockB->form;
 
     for (i = 0; i < 10 + 1; i++) {
-        param1->nickname[i] = monDataBlockC->nickname[i];
+        targetMon->nickname[i] = monDataBlockC->nickname[i];
     }
 
     for (i = 0; i < 7 + 1; i++) {
-        param1->otName[i] = monDataBlockD->otName[i];
+        targetMon->otName[i] = monDataBlockD->otName[i];
     }
 
-    param1->pokeball = monDataBlockD->pokeball;
+    targetMon->pokeball = monDataBlockD->pokeball;
 
-    param1->status = mon->party.status;
-    param1->level = mon->party.level;
-    param1->ballCapsuleID = mon->party.ballCapsuleID;
-    param1->hp = mon->party.hp;
-    param1->maxHP = mon->party.maxHP;
-    param1->attack = mon->party.attack;
-    param1->defense = mon->party.defense;
-    param1->speed = mon->party.speed;
-    param1->spAtk = mon->party.spAtk;
-    param1->spDef = mon->party.spDef;
+    targetMon->status = mon->party.status;
+    targetMon->level = mon->party.level;
+    targetMon->ballCapsuleID = mon->party.ballCapsuleID;
+    targetMon->hp = mon->party.hp;
+    targetMon->maxHP = mon->party.maxHP;
+    targetMon->attack = mon->party.attack;
+    targetMon->defense = mon->party.defense;
+    targetMon->speed = mon->party.speed;
+    targetMon->spAtk = mon->party.spAtk;
+    targetMon->spDef = mon->party.spDef;
 
     if (mon->box.partyDecrypted == FALSE) {
         Pokemon_EncryptData(&mon->party, sizeof(PartyPokemon), mon->box.personality);
