@@ -394,7 +394,7 @@ static void ov62_02231C78(UnkStruct_ov62_022323B8 *param0, UnkStruct_0208C06C *p
             Window_Init(v2);
             Window_Add(param1->unk_14.unk_10, v2, 2, Unk_ov62_02248A28[v0][0], Unk_ov62_02248A28[v0][1], Unk_ov62_02248A28[v0][2], Unk_ov62_02248A28[v0][3], 14, v1);
             Window_FillTilemap(v2, 0x00);
-            Text_AddPrinterWithParamsAndColor(v2, FONT_SYSTEM, v3, ov62_0223429C(v2, v3), 0, (0xff), ((u32)(((15 & (0xff)) << 16) | ((13 & (0xff)) << 8) | ((0 & (0xff)) << 0))), NULL);
+            Text_AddPrinterWithParamsAndColor(v2, FONT_SYSTEM, v3, ov62_0223429C(v2, v3), 0, 0xff, (u32)(((15 & (0xff)) << 16) | ((13 & (0xff)) << 8) | ((0 & (0xff)) << 0)), NULL);
             Window_ScheduleCopyToVRAM(v2);
             v1 += (Unk_ov62_02248A28[v0][2] * Unk_ov62_02248A28[v0][3]);
             String_Free(v3);
@@ -890,7 +890,7 @@ void ov62_02232594(UnkStruct_ov62_02233310 *param0, UnkStruct_0208C06C *param1, 
             v5 = String_Init(255, HEAP_ID_102);
             v6 = MessageLoader_GetNewString(param1->unk_14.unk_34, 99);
 
-            String_FormatInt(v5, (v0 + 1), 2, 1, 1);
+            String_FormatInt(v5, v0 + 1, 2, 1, 1);
             String_CopyChars(v4, param1->unk_8B4.unk_1D58[v0]->unk_00.unk_00);
             ov62_022349A8(param1, v4);
 
@@ -1303,7 +1303,7 @@ int ov62_02233064(UnkStruct_ov62_02233310 *param0, UnkStruct_0208C06C *param1)
             v8 = String_Init(255, HEAP_ID_102);
             v9 = MessageLoader_GetNewString(param1->unk_14.unk_34, 99);
 
-            String_FormatInt(v8, (v5 + v4 + 1), 2, 1, 1);
+            String_FormatInt(v8, v5 + v4 + 1, 2, 1, 1);
             String_CopyChars(v7, param1->unk_8B4.unk_1D58[v5 + v4]->unk_00.unk_00);
             ov62_022349A8(param1, v7);
 
@@ -1709,7 +1709,7 @@ void ov62_0223371C(UnkStruct_0208C06C *param0)
     {
         UnkStruct_02030A80 *v1 = (UnkStruct_02030A80 *)(&param0->unk_8B4.unk_00->unk_00);
         UnkStruct_0202F41C *v2 = (UnkStruct_0202F41C *)(&param0->unk_8B4.unk_00->unk_80);
-        UnkStruct_0202F298 *v3 = (UnkStruct_0202F298 *)(&param0->unk_8B4.unk_00->unk_E4);
+        BattleRecordingData *v3 = (BattleRecordingData *)(&param0->unk_8B4.unk_00->unk_E4);
         sub_0202FE20(v1, v2, v3, NULL, param0->saveData);
     }
 }

@@ -25,10 +25,10 @@ static void ov62_0224856C(String *param0, enum HeapID heapID);
 
 extern BattleRecording *gBattleRecording;
 
-void ov62_02248408(BattleRecording *param0, FieldBattleDTO *param1, enum HeapID heapID)
+void ov62_02248408(BattleRecording *battleRecording, FieldBattleDTO *param1, enum HeapID heapID)
 {
-    UnkStruct_0202F298 *v0 = &param0->unk_E8;
-    UnkStruct_0202F41C *v1 = &param0->unk_84;
+    BattleRecordingData *v0 = &battleRecording->battleRecordingData;
+    UnkStruct_0202F41C *v1 = &battleRecording->unk_84;
     int v2, v3, v4, v5;
     String *v6, *v7;
     u16 *v8;
@@ -116,10 +116,10 @@ int ov62_02248598(SaveData *saveData, int param1, u8 param2, u16 *param3, u16 *p
             gBattleRecording->unk_84.unk_27 = param2;
 
             gBattleRecording->unk_84.unk_48 = 0xe281;
-            gBattleRecording->unk_84.unk_60.unk_00 = SaveData_CalculateChecksum(saveData, &gBattleRecording->unk_84, sizeof(UnkStruct_0202F41C) - (sizeof(UnkStruct_0202F298_sub1)) - (sizeof(u64)));
+            gBattleRecording->unk_84.unk_60.unk_00 = SaveData_CalculateChecksum(saveData, &gBattleRecording->unk_84, sizeof(UnkStruct_0202F41C) - (sizeof(BattleRecordingData_sub1)) - (sizeof(u64)));
         }
 
-        sub_0202F858(&gBattleRecording->unk_E8, sizeof(UnkStruct_0202F298) - (sizeof(UnkStruct_0202F298_sub1)), gBattleRecording->unk_E8.unk_1BEC.unk_00 + ((gBattleRecording->unk_E8.unk_1BEC.unk_00 ^ 0xffff) << 16));
+        sub_0202F858(&gBattleRecording->battleRecordingData, sizeof(BattleRecordingData) - (sizeof(BattleRecordingData_sub1)), gBattleRecording->battleRecordingData.unk_1BEC.unk_00 + ((gBattleRecording->battleRecordingData.unk_1BEC.unk_00 ^ 0xffff) << 16));
         (*param3)++;
         break;
     case 1:
@@ -133,7 +133,7 @@ int ov62_02248598(SaveData *saveData, int param1, u8 param2, u16 *param3, u16 *p
 void ov62_02248624(SaveData *saveData)
 {
     GF_ASSERT(gBattleRecording);
-    sub_0202F858(&gBattleRecording->unk_E8, sizeof(UnkStruct_0202F298) - (sizeof(UnkStruct_0202F298_sub1)), gBattleRecording->unk_E8.unk_1BEC.unk_00 + ((gBattleRecording->unk_E8.unk_1BEC.unk_00 ^ 0xffff) << 16));
+    sub_0202F858(&gBattleRecording->battleRecordingData, sizeof(BattleRecordingData) - (sizeof(BattleRecordingData_sub1)), gBattleRecording->battleRecordingData.unk_1BEC.unk_00 + ((gBattleRecording->battleRecordingData.unk_1BEC.unk_00 ^ 0xffff) << 16));
 }
 
 int ov62_02248658(SaveData *saveData, u64 param1, u16 *param2, u16 *param3)
@@ -163,9 +163,9 @@ int ov62_022486A4(SaveData *saveData, int param1)
 
     gBattleRecording->unk_84.unk_27 = 1;
     gBattleRecording->unk_84.unk_48 = 0xe281;
-    gBattleRecording->unk_84.unk_60.unk_00 = SaveData_CalculateChecksum(saveData, &gBattleRecording->unk_84, sizeof(UnkStruct_0202F41C) - (sizeof(UnkStruct_0202F298_sub1)) - (sizeof(u64)));
+    gBattleRecording->unk_84.unk_60.unk_00 = SaveData_CalculateChecksum(saveData, &gBattleRecording->unk_84, sizeof(UnkStruct_0202F41C) - (sizeof(BattleRecordingData_sub1)) - (sizeof(u64)));
 
-    sub_0202F858(&gBattleRecording->unk_E8, sizeof(UnkStruct_0202F298) - (sizeof(UnkStruct_0202F298_sub1)), gBattleRecording->unk_E8.unk_1BEC.unk_00 + ((gBattleRecording->unk_E8.unk_1BEC.unk_00 ^ 0xffff) << 16));
+    sub_0202F858(&gBattleRecording->battleRecordingData, sizeof(BattleRecordingData) - (sizeof(BattleRecordingData_sub1)), gBattleRecording->battleRecordingData.unk_1BEC.unk_00 + ((gBattleRecording->battleRecordingData.unk_1BEC.unk_00 ^ 0xffff) << 16));
     ResetLock(RESET_LOCK_0x8);
 
     v0 = SaveData_SaveBattleRecording(saveData, gBattleRecording, param1);

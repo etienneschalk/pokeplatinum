@@ -1,6 +1,6 @@
 #ifndef POKEPLATINUM_STRUCT_02078B40_DECL_H
 #define POKEPLATINUM_STRUCT_02078B40_DECL_H
 
-typedef struct UnkStruct_02078B40_t UnkStruct_02078B40;
+typedef struct BattleRecordingPokemon_t BattleRecordingPokemon;
 
 #endif // POKEPLATINUM_STRUCT_02078B40_DECL_H

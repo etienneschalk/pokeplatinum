@@ -32,7 +32,7 @@ UnkStruct_0202F41C *sub_0202FD88(enum HeapID heapID);
 UnkStruct_02030A80 *sub_0202FDB8(enum HeapID heapID);
 UnkStruct_02030A80 *sub_0202FDE8(void);
 UnkStruct_0202F41C *sub_0202FE04(void);
-void sub_0202FE20(UnkStruct_02030A80 *param0, UnkStruct_0202F41C *param1, UnkStruct_0202F298 *param2, FieldBattleDTO *param3, SaveData *saveData);
+void sub_0202FE20(UnkStruct_02030A80 *param0, UnkStruct_0202F41C *param1, BattleRecordingData *param2, FieldBattleDTO *param3, SaveData *saveData);
 u64 sub_0202FE98(UnkStruct_0202F41C *param0, int param1, int param2);
 UnkStruct_0202F41C *sub_0202FF2C(enum HeapID heapID);
 void sub_0202FF44(UnkStruct_0202F41C *param0);

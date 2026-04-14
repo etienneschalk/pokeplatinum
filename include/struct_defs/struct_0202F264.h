@@ -9,7 +9,7 @@ typedef struct BattleRecording {
     u32 unk_00;
     UnkStruct_02030A80 unk_04;
     UnkStruct_0202F41C unk_84;
-    UnkStruct_0202F298 unk_E8;
+    BattleRecordingData battleRecordingData;
 } BattleRecording;
 
 #endif // POKEPLATINUM_STRUCT_0202F264_H

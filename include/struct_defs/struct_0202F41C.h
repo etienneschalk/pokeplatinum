@@ -15,7 +15,7 @@ typedef struct UnkStruct_0202F41C_t {
     u16 unk_48;
     u8 unk_4A[14];
     u64 unk_58;
-    UnkStruct_0202F298_sub1 unk_60;
+    BattleRecordingData_sub1 unk_60;
 } UnkStruct_0202F41C;
 
 #endif // POKEPLATINUM_STRUCT_0202F41C_H
