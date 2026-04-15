@@ -10,7 +10,7 @@
 #include "trainer_info.h"
 
 typedef struct BattleRecordingData_t {
-    BattleRecordingDataFieldBattleDTO unk_00;
+    BattleRecordingDataFieldBattleDTO brdFieldBattleDTO;
     BattleRecordingDataFieldBattleDTO_sub1 unk_150;
     BattleRecordingParty parties[4];
     TrainerInfo trainerInfo[4];

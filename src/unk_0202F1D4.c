@@ -94,7 +94,7 @@ void *sub_0202F27C(void)
     return &v0[sizeof(u32)];
 }
 
-BOOL sub_0202F298(SaveData *saveData, int param1, int *param2, FieldBattleDTO *param3, int param4)
+BOOL sub_0202F298(SaveData *saveData, int heapID, int *resultCode, FieldBattleDTO *fieldBattleDTO, int recNum)
 {
     BattleRecordingData *battleRecordingData;
     UnkStruct_0202F41C *v1;
@@ -104,10 +104,10 @@ BOOL sub_0202F298(SaveData *saveData, int param1, int *param2, FieldBattleDTO *p
         gBattleRecording = NULL;
     }
 
-    gBattleRecording = SaveData_GetBattleRecording(saveData, param1, param2, param4);
+    gBattleRecording = SaveData_GetBattleRecording(saveData, heapID, resultCode, recNum);
 
-    if (*param2 != 1) {
-        *param2 = 3;
+    if (*resultCode != 1) {
+        *resultCode = 3;
         return 1;
     }
 
@@ -117,20 +117,20 @@ BOOL sub_0202F298(SaveData *saveData, int param1, int *param2, FieldBattleDTO *p
     sub_0202F860(battleRecordingData, sizeof(BattleRecordingData) - (sizeof(BattleRecordingData_sub1)), battleRecordingData->unk_1BEC.unk_00 + ((battleRecordingData->unk_1BEC.unk_00 ^ 0xffff) << 16));
 
     if (sub_0202F75C(saveData, gBattleRecording) == 1) {
-        *param2 = 0;
+        *resultCode = 0;
         return 1;
     }
 
     if (sub_0202F794(saveData, gBattleRecording) == 0) {
-        *param2 = 2;
+        *resultCode = 2;
         return 1;
     }
 
-    if (param3) {
-        sub_0202FAFC(param3, saveData);
+    if (fieldBattleDTO) {
+        sub_0202FAFC(fieldBattleDTO, saveData);
     }
 
-    *param2 = 1;
+    *resultCode = 1;
     return 1;
 }
 
@@ -258,10 +258,10 @@ void sub_0202F4C0(int param0, int *param1, int *param2)
     }
 }
 
-static void sub_0202F510(SaveData *saveData, UnkStruct_0202F41C *param1, const BattleRecordingData *param2, int param3, int param4)
+static void sub_0202F510(SaveData *saveData, UnkStruct_0202F41C *param1, const BattleRecordingData *battleRecordingData, int param3, int param4)
 {
     int v0, v1, v2, v3, v4, v5, v6;
-    const BattleRecordingPokemon *v7;
+    const BattleRecordingPokemon *mon;
     const u8 v8[2][4] = {
         { 0, 2, 3, 1 },
         { 3, 1, 0, 2 },
@@ -273,24 +273,24 @@ static void sub_0202F510(SaveData *saveData, UnkStruct_0202F41C *param1, const B
 
     v4 = 0;
 
-    if (param2->unk_00.battleType & 0x4) {
-        if (param2->unk_00.battleType & 0x80) {
-            v6 = param2->unk_00.networkID * 2;
+    if (battleRecordingData->brdFieldBattleDTO.battleType & 0x4) {
+        if (battleRecordingData->brdFieldBattleDTO.battleType & 0x80) {
+            v6 = battleRecordingData->brdFieldBattleDTO.networkID * 2;
         } else {
-            v6 = param2->unk_00.networkID;
+            v6 = battleRecordingData->brdFieldBattleDTO.networkID;
         }
     } else {
         v6 = 0;
     }
 
     for (v0 = 0; v0 < v2; v0++) {
-        if ((param2->unk_00.battleType & 0x8) && ((param2->unk_00.battleType & 0x80) == 0)) {
+        if ((battleRecordingData->brdFieldBattleDTO.battleType & 0x8) && ((battleRecordingData->brdFieldBattleDTO.battleType & 0x80) == 0)) {
             for (v5 = 0; v5 < v2; v5++) {
-                if (param2->unk_00.unk_134[v5] == v8[param2->unk_00.unk_134[v6] & 1][v0]) {
+                if (battleRecordingData->brdFieldBattleDTO.unk_134[v5] == v8[battleRecordingData->brdFieldBattleDTO.unk_134[v6] & 1][v0]) {
                     break;
                 }
             }
-        } else if ((param2->unk_00.battleType & 0x8) && (param2->unk_00.battleType & 0x80)) {
+        } else if ((battleRecordingData->brdFieldBattleDTO.battleType & 0x8) && (battleRecordingData->brdFieldBattleDTO.battleType & 0x80)) {
             v5 = v9[v0];
         } else {
             v5 = v0;
@@ -301,11 +301,11 @@ static void sub_0202F510(SaveData *saveData, UnkStruct_0202F41C *param1, const B
         }
 
         for (v1 = 0; v1 < v3; v1++) {
-            v7 = &(param2->parties[v5].pokemon[v1]);
+            mon = &(battleRecordingData->parties[v5].pokemon[v1]);
 
-            if ((v7->isEgg == 0) && (v7->checksumFailed == 0)) {
-                param1->unk_00[v4] = v7->species;
-                param1->unk_18[v4] = v7->form;
+            if ((mon->isEgg == 0) && (mon->checksumFailed == 0)) {
+                param1->unk_00[v4] = mon->species;
+                param1->unk_18[v4] = mon->form;
             }
 
             v4++;
@@ -442,91 +442,93 @@ u8 sub_0202F884(int param0, int param1)
 void sub_0202F8AC(FieldBattleDTO *fieldBattleDTO)
 {
     int t; // Trainer counter for iteration
-    BattleRecordingData *v1;
-    BattleRecordingDataFieldBattleDTO *v2;
+    BattleRecordingData *battleRecordingData;
+    BattleRecordingDataFieldBattleDTO *brdFieldBattleDTO;
 
     if (gBattleRecording == NULL) {
         return;
     }
 
-    v1 = &gBattleRecording->battleRecordingData;
-    v2 = &v1->unk_00;
+    battleRecordingData = &gBattleRecording->battleRecordingData;
+    brdFieldBattleDTO = &battleRecordingData->brdFieldBattleDTO;
 
-    v2->battleType = fieldBattleDTO->battleType;
-    v2->resultMask = fieldBattleDTO->resultMask;
-    v2->background = fieldBattleDTO->background;
-    v2->terrain = fieldBattleDTO->terrain;
-    v2->mapLabelTextID = fieldBattleDTO->mapLabelTextID;
-    v2->mapHeaderID = fieldBattleDTO->mapHeaderID;
-    v2->timeOfDay = fieldBattleDTO->timeOfDay;
-    v2->mapEvolutionMethod = fieldBattleDTO->mapEvolutionMethod;
-    v2->visitedContestHall = fieldBattleDTO->visitedContestHall;
-    v2->metBebe = fieldBattleDTO->metBebe;
-    v2->caughtBattlerIdx = fieldBattleDTO->caughtBattlerIdx;
-    v2->fieldWeather = fieldBattleDTO->fieldWeather;
-    v2->leveledUpMonsMask = fieldBattleDTO->leveledUpMonsMask;
-    v2->battleStatusMask = fieldBattleDTO->battleStatusMask;
-    v2->countSafariBalls = fieldBattleDTO->countSafariBalls;
-    v2->rulesetMask = fieldBattleDTO->rulesetMask;
-    v2->seed = fieldBattleDTO->seed;
-    v2->networkID = fieldBattleDTO->networkID;
-    v2->dummy18B = fieldBattleDTO->dummy18B;
-    v2->totalTurnsElapsed = fieldBattleDTO->totalTurnsElapsed;
+    brdFieldBattleDTO->battleType = fieldBattleDTO->battleType;
+    brdFieldBattleDTO->resultMask = fieldBattleDTO->resultMask;
+    brdFieldBattleDTO->background = fieldBattleDTO->background;
+    brdFieldBattleDTO->terrain = fieldBattleDTO->terrain;
+    brdFieldBattleDTO->mapLabelTextID = fieldBattleDTO->mapLabelTextID;
+    brdFieldBattleDTO->mapHeaderID = fieldBattleDTO->mapHeaderID;
+    brdFieldBattleDTO->timeOfDay = fieldBattleDTO->timeOfDay;
+    brdFieldBattleDTO->mapEvolutionMethod = fieldBattleDTO->mapEvolutionMethod;
+    brdFieldBattleDTO->visitedContestHall = fieldBattleDTO->visitedContestHall;
+    brdFieldBattleDTO->metBebe = fieldBattleDTO->metBebe;
+    brdFieldBattleDTO->caughtBattlerIdx = fieldBattleDTO->caughtBattlerIdx;
+    brdFieldBattleDTO->fieldWeather = fieldBattleDTO->fieldWeather;
+    brdFieldBattleDTO->leveledUpMonsMask = fieldBattleDTO->leveledUpMonsMask;
+    brdFieldBattleDTO->battleStatusMask = fieldBattleDTO->battleStatusMask;
+    brdFieldBattleDTO->countSafariBalls = fieldBattleDTO->countSafariBalls;
+    brdFieldBattleDTO->rulesetMask = fieldBattleDTO->rulesetMask;
+    brdFieldBattleDTO->seed = fieldBattleDTO->seed;
+    brdFieldBattleDTO->networkID = fieldBattleDTO->networkID;
+    brdFieldBattleDTO->dummy18B = fieldBattleDTO->dummy18B;
+    brdFieldBattleDTO->totalTurnsElapsed = fieldBattleDTO->totalTurnsElapsed;
 
+    // Copy Trainers
     for (t = 0; t < 4; t++) {
-        v2->trainerIDs[t] = fieldBattleDTO->trainerIDs[t];
-        v2->trainer[t] = fieldBattleDTO->trainer[t];
+        brdFieldBattleDTO->trainerIDs[t] = fieldBattleDTO->trainerIDs[t];
+        brdFieldBattleDTO->trainer[t] = fieldBattleDTO->trainer[t];
 
         if (fieldBattleDTO->systemVersion[t] == 0) {
-            v2->systemVersion[t] = 0x140;
+            brdFieldBattleDTO->systemVersion[t] = 0x140;
         } else {
-            v2->systemVersion[t] = fieldBattleDTO->systemVersion[t];
+            brdFieldBattleDTO->systemVersion[t] = fieldBattleDTO->systemVersion[t];
         }
 
-        v2->unk_134[t] = fieldBattleDTO->unk_178[t];
-        v2->unk_14C[t] = fieldBattleDTO->unk_194[t];
+        brdFieldBattleDTO->unk_134[t] = fieldBattleDTO->unk_178[t];
+        brdFieldBattleDTO->unk_14C[t] = fieldBattleDTO->unk_194[t];
     }
 
+    // Copy Trainers' Parties
     for (t = 0; t < 4; t++) {
-        Copy_Party_to_BattleRecordingParty(fieldBattleDTO->parties[t], &v1->parties[t]);
-        TrainerInfo_Copy(fieldBattleDTO->trainerInfo[t], &v1->trainerInfo[t]);
+        Copy_Party_to_BattleRecordingParty(fieldBattleDTO->parties[t], &battleRecordingData->parties[t]);
+        TrainerInfo_Copy(fieldBattleDTO->trainerInfo[t], &battleRecordingData->trainerInfo[t]);
 
-        v2->unk_14C[t] = Sound_GetChatterActivationParameter(fieldBattleDTO->chatotCries[t]);
+        brdFieldBattleDTO->unk_14C[t] = Sound_GetChatterActivationParameter(fieldBattleDTO->chatotCries[t]);
     }
 
-    Options_Copy(fieldBattleDTO->options, &v1->options);
+    Options_Copy(fieldBattleDTO->options, &battleRecordingData->options);
 }
 
 void sub_0202FAA8(int param0, u32 param1)
 {
-    BattleRecordingData *v0;
-    BattleRecordingDataFieldBattleDTO *v1;
+    BattleRecordingData *battleRecordingData;
+    BattleRecordingDataFieldBattleDTO *brdFieldBattleDTO;
 
     if (gBattleRecording == NULL) {
         return;
     }
 
-    v0 = &gBattleRecording->battleRecordingData;
-    v1 = &v0->unk_00;
+    battleRecordingData = &gBattleRecording->battleRecordingData;
+    brdFieldBattleDTO = &battleRecordingData->brdFieldBattleDTO;
 
-    v1->systemVersion[param0] = param1;
+    brdFieldBattleDTO->systemVersion[param0] = param1;
 }
 
 BOOL sub_0202FAC0(void)
 {
     int v0;
-    BattleRecordingData *v1;
-    BattleRecordingDataFieldBattleDTO *v2;
+    BattleRecordingData *battleRecordingData;
+    BattleRecordingDataFieldBattleDTO *brdFieldBattleDTO;
 
     if (gBattleRecording == NULL) {
         return 1;
     }
 
-    v1 = &gBattleRecording->battleRecordingData;
-    v2 = &v1->unk_00;
+    battleRecordingData = &gBattleRecording->battleRecordingData;
+    brdFieldBattleDTO = &battleRecordingData->brdFieldBattleDTO;
 
     for (v0 = 0; v0 < 4; v0++) {
-        if (v2->systemVersion[v0] > 0x140) {
+        if (brdFieldBattleDTO->systemVersion[v0] > 0x140) {
             return 0;
         }
     }
@@ -537,43 +539,43 @@ BOOL sub_0202FAC0(void)
 void sub_0202FAFC(FieldBattleDTO *dto, SaveData *saveData)
 {
     int i;
-    BattleRecordingData *v1 = &gBattleRecording->battleRecordingData;
+    BattleRecordingData *battleRecordingData = &gBattleRecording->battleRecordingData;
 
-    dto->battleType = v1->unk_00.battleType;
-    dto->background = v1->unk_00.background;
-    dto->terrain = v1->unk_00.terrain;
-    dto->mapLabelTextID = v1->unk_00.mapLabelTextID;
-    dto->mapHeaderID = v1->unk_00.mapHeaderID;
-    dto->timeOfDay = v1->unk_00.timeOfDay;
-    dto->mapEvolutionMethod = v1->unk_00.mapEvolutionMethod;
-    dto->visitedContestHall = v1->unk_00.visitedContestHall;
-    dto->metBebe = v1->unk_00.metBebe;
-    dto->caughtBattlerIdx = v1->unk_00.caughtBattlerIdx;
-    dto->fieldWeather = v1->unk_00.fieldWeather;
-    dto->battleStatusMask = v1->unk_00.battleStatusMask | BATTLE_STATUS_RECORDING;
-    dto->countSafariBalls = v1->unk_00.countSafariBalls;
-    dto->rulesetMask = v1->unk_00.rulesetMask;
-    dto->seed = v1->unk_00.seed;
-    dto->networkID = v1->unk_00.networkID;
+    dto->battleType = battleRecordingData->brdFieldBattleDTO.battleType;
+    dto->background = battleRecordingData->brdFieldBattleDTO.background;
+    dto->terrain = battleRecordingData->brdFieldBattleDTO.terrain;
+    dto->mapLabelTextID = battleRecordingData->brdFieldBattleDTO.mapLabelTextID;
+    dto->mapHeaderID = battleRecordingData->brdFieldBattleDTO.mapHeaderID;
+    dto->timeOfDay = battleRecordingData->brdFieldBattleDTO.timeOfDay;
+    dto->mapEvolutionMethod = battleRecordingData->brdFieldBattleDTO.mapEvolutionMethod;
+    dto->visitedContestHall = battleRecordingData->brdFieldBattleDTO.visitedContestHall;
+    dto->metBebe = battleRecordingData->brdFieldBattleDTO.metBebe;
+    dto->caughtBattlerIdx = battleRecordingData->brdFieldBattleDTO.caughtBattlerIdx;
+    dto->fieldWeather = battleRecordingData->brdFieldBattleDTO.fieldWeather;
+    dto->battleStatusMask = battleRecordingData->brdFieldBattleDTO.battleStatusMask | BATTLE_STATUS_RECORDING;
+    dto->countSafariBalls = battleRecordingData->brdFieldBattleDTO.countSafariBalls;
+    dto->rulesetMask = battleRecordingData->brdFieldBattleDTO.rulesetMask;
+    dto->seed = battleRecordingData->brdFieldBattleDTO.seed;
+    dto->networkID = battleRecordingData->brdFieldBattleDTO.networkID;
     dto->resultMask = BATTLE_IN_PROGRESS;
     dto->leveledUpMonsMask = 0;
 
     Pokedex_Copy(SaveData_GetPokedex(saveData), dto->pokedex);
 
     for (i = 0; i < 4; i++) {
-        dto->trainerIDs[i] = v1->unk_00.trainerIDs[i];
-        dto->trainer[i] = v1->unk_00.trainer[i];
-        dto->systemVersion[i] = v1->unk_00.systemVersion[i];
-        dto->unk_178[i] = v1->unk_00.unk_134[i];
+        dto->trainerIDs[i] = battleRecordingData->brdFieldBattleDTO.trainerIDs[i];
+        dto->trainer[i] = battleRecordingData->brdFieldBattleDTO.trainer[i];
+        dto->systemVersion[i] = battleRecordingData->brdFieldBattleDTO.systemVersion[i];
+        dto->unk_178[i] = battleRecordingData->brdFieldBattleDTO.unk_134[i];
 
-        Copy_BattleRecordingParty_to_Party(&v1->parties[i], dto->parties[i]);
-        TrainerInfo_Copy(&v1->trainerInfo[i], dto->trainerInfo[i]);
+        Copy_BattleRecordingParty_to_Party(&battleRecordingData->parties[i], dto->parties[i]);
+        TrainerInfo_Copy(&battleRecordingData->trainerInfo[i], dto->trainerInfo[i]);
 
-        dto->unk_194[i] = v1->unk_00.unk_14C[i];
+        dto->unk_194[i] = battleRecordingData->brdFieldBattleDTO.unk_14C[i];
     }
 
     Options_Copy(SaveData_GetOptions(saveData), dto->options);
-    dto->options->frame = v1->options.frame;
+    dto->options->frame = battleRecordingData->options.frame;
 
     if (dto->options->frame >= 20) {
         dto->options->frame = 0;

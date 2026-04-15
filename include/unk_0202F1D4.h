@@ -16,7 +16,7 @@ void BattleRecording_Free(void);
 BOOL BattleRecording_Exists(void);
 BattleRecording *BattleRecording_Get(void);
 void *sub_0202F27C(void);
-BOOL sub_0202F298(SaveData *saveData, int param1, int *param2, FieldBattleDTO *param3, int param4);
+BOOL sub_0202F298(SaveData *saveData, int heapID, int *resultCode, FieldBattleDTO *fieldBattleDTO, int recNum);
 BOOL sub_0202F330(SaveData *saveData, int param1, int *param2, int param3);
 int sub_0202F3AC(SaveData *saveData, BattleRecording *param1, int param2, u16 *param3);
 int sub_0202F41C(SaveData *saveData, int param1, int param2, int param3, u16 *param4, u16 *param5);
